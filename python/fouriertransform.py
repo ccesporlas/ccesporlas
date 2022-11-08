@@ -10,14 +10,14 @@
 #############################################################################################
 
 import matplotlib.pyplot as plt
-import numpy as n, numpy.random as nrand, numpy.fft as nfft
+import numpy as npy, numpy.random as nrand, numpy.fft as nfft
 
 N = 100 #number of voltage probes, increase to make the signal more defined
-x = n.linspace(0,N-1,N)
+x = npy.linspace(0,N-1,N)
 
 #problem 1
 plt.figure(1)
-b1 = n.zeros(N) #array of 64 zeroes
+b1 = npy.zeros(N) #array of 64 zeroes
 
 for i in range(8,17,2):
     #choose values we can change with some value
@@ -32,13 +32,13 @@ plt.ylabel('Voltage Sequence(U)')
 
 #problem 2
 plt.figure(2)
-b2 = n.zeros(N)
+b2 = npy.zeros(N)
 
 for i in range(8,17,2):
     #choose random values between 0 and 1, multiply by 360 to get randome phase in degrees
-    bs = int(abs(n.exp(1j*nrand.rand()*360)))
+    bs = int(abs(npy.exp(1j*nrand.rand()*360)))
     b2[i] = bs
-    b2[N-i] = n.conjugate(bs)
+    b2[N-i] = npy.conjugate(bs)
 
 part2 = nfft.ifft(b2)
 plt.plot(x,part2,'b',label='Voltage Signal with Random Phases',linewidth=0.7)
@@ -55,10 +55,10 @@ plt.ylabel('Voltage Sequence(U)')
 
 N3 = 100 #number of probes for one voltage signal
 R3 = 100 #number of voltage signals
-raxis = n.linspace(0,R3-1,R3)
-x3 = n.linspace(0,N3-1,N3)
+raxis = npy.linspace(0,R3-1,R3)
+x3 = npy.linspace(0,N3-1,N3)
 
-b3 = n.zeros(N3)
+b3 = npy.zeros(N3)
 
 #create empty arrays to store maxU and phi values
 #repeat what we did in part 2 multiple times to get multiple sets of signals and phases
@@ -70,14 +70,14 @@ for r in range(R3):
     for nn in range(0,N3-1):
         for i in range(8,17,2):
             phi = nrand.rand()*360
-            b3[i] = int(abs( n.exp(1j*phi) ))
-            b3[N3-i] = n.conjugate(b3[i])
+            b3[i] = int(abs( npy.exp(1j*phi) ))
+            b3[N3-i] = npy.conjugate(b3[i])
 
         #store generated and used phi values
         phis.append(phi)
 
     #get Fourier transform of set of b values
-    U = n.real(nfft.ifft(b3))
+    U = npy.real(nfft.ifft(b3))
     plt.plot(x3,U,'g',label='Voltage Signals with Different Sets of Random Phases',linewidth=0.7)
 
     #make a two dimensional array of the U value and the respective phi value used
