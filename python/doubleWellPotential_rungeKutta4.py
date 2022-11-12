@@ -25,10 +25,15 @@ alpha = 2
 y0 = 1
 yout = rk4(derivs, y0, t)
 '''
-
-def derivs6(x,t):
+def derivs1(x,t):
+    '''Particle behavior in a double-well potential'''
     d1 =  x[1]
     d2 =  -0.1*x[1] + x[0] - x[0]*x[0]*x[0]
+    return (d1,d2)
+
+def derivs2(x,t):
+    d1 =  x[1]
+    d2 =  -r*x[1] - npy.sin(x[0])
     return (d1,d2)
 
 def rk4(derivs, y0, t):
@@ -59,21 +64,40 @@ def rk4(derivs, y0, t):
         yout[i+1] = y0 + dt/6.0*(k1 + 2*k2 + 2*k3 + k4)
     return yout
 
-t = npy.arange(0.0,100.0,0.05)
+fig, (ax1,ax2) = plt.subplots(2,1) #figsize=(9,7),dpi=1000
+plt.subplots_adjust(left=0.1,bottom=0.1,right=0.95,top=0.95,wspace=0.4,hspace=0.4)
 
-for i in npy.linspace(-2.5,2.5,30):
-    for j in npy.linspace(-2.5,2.5,30):
-        yout = rk4(derivs6, [i,j], t)
+# Figure 1 Double-Well Potential
+t = npy.arange(0.0,100.0,0.05)
+# x = npy.arange(-5.0,5.0,0.5)
+x = npy.linspace(-2.5,2.5,30)
+
+for i in x:
+    for j in x:
+        yout = rk4(derivs1, [i,j], t)
         x = yout[0:,0]
         y = yout[0:,1]
 
         l = len(x)
         if (-1.5 < x[l-1] < -0.5):
             if (-0.5 < y[l-1] < 0.5):
-                plt.plot(x,y,'go',markersize=0.8)
-                plt.title('Basin of Attraction for the Double-Well Potential as x(infinity)=-1')
-                plt.xlabel('initial positions, x(0)')
-                plt.ylabel('initial velocities, xdot(0)')
-                plt.axis([-2,2,-2,2])
+                ax1.plot(x,y,'go',markersize=0.8)
+                ax1.set_title('Basin of Attraction for the Double-Well Potential as x(infinity)=-1')
+                ax1.set_xlabel('initial positions, x(0)')
+                ax1.set_ylabel('initial velocities, xdot(0)')
+                ax1.axis([-2,2,-2,2])
+
+# Figure 2 Single-Well Potential
+r = .2
+t = npy.arange(0.0,100.0,0.1)
+x = npy.linspace(-(npy.pi)/2.,(npy.pi)/2.,4)
+
+for i in x:
+    for j in x:
+        yout = rk4(derivs2,[i,j], t)
+        x = yout[0:,0]
+        y = yout[0:,1]
+        ax2.plot(x,y)
+        ax2.set_title('Single-well?')
 
 plt.show()
